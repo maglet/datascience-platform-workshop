@@ -1,0 +1,48 @@
+---
+title: "Flexdashboard report"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(knitr)
+
+surveys_complete<-read_csv("data/complete_surveys.csv")
+```
+
+Column {data-width=650}
+--------------------------------------------------------------------
+
+### Small animal survey data
+
+This is a survey of small animals from `r nlevels(as.factor(surveys_complete$plot_id))` plots
+from the years `r min(surveys_complete$year)` to `r max(surveys_complete$year)`. Each row is an animal. Each column is an attribute of that animal. The variables recorded are `r names(surveys_complete)`.
+
+### Sex Table
+Here is a breakdown of the number of female vs male animals observed in the study
+```{r}
+kable(surveys_complete%>%
+                group_by(sex)%>%
+                tally)
+```
+
+### Mean weight
+The mean weight of all animals surveyed 
+is `r mean(surveys_complete$weight, na.rm=TRUE)`.
+
+### Weight vs. Hindfoot length
+Species cluster together when plotting weight vs. hindfood length
+```{r}
+ggplot(data = surveys_complete, 
+       aes(x = weight, 
+           y = hindfoot_length, 
+           color = species_id)) + 
+          geom_point(alpha = 0.1,
+           aes(color = species_id))
+```
+
+
