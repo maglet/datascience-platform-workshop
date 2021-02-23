@@ -14,7 +14,9 @@ resource_files:
 library(tidyverse)
 library(knitr)
 library(reticulate)
+knitr::knit_engines$set(python = reticulate::eng_python) 
 
+use_condaenv('/home/tmagle/.local/share/r-miniconda/envs/r-reticulate')
 surveys_complete<-read_csv("data/complete_surveys.csv")
 
 ```
@@ -40,13 +42,19 @@ is `r mean(surveys_complete$weight, na.rm=TRUE)`.
 # Relationship between hindfoot length and weight
 We are interested in the relationship between weight and hindfoot length by species. Here is a graph.
 
-```{r graph, echo=FALSE, warnings = FALSE}
-ggplot(data = surveys_complete, 
-       aes(x = weight, 
-           y = hindfoot_length, 
-           color = species_id)) + 
-          geom_point(alpha = 0.1,
-           aes(color = species_id))
+```{python graph2, echo=FALSE, warnings = FALSE}
 
 
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+import PyQt5
+plt.switch_backend('agg') # Very Important in R Markdown with Rocker/VBox
+
+sns.relplot(data=r.surveys_complete,
+            x="weight", 
+            y="hindfoot_length", 
+            alpha = 0.1, 
+            hue = "species_id")
+plt.show()
 ```
