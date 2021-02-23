@@ -32,12 +32,12 @@ surveys <- pd$read_csv('data/complete_surveys.csv')
 
 
 #sns.relplot(data=surveys,
-sns$relplot
+sns$relplot(data = surveys,
             x="weight", 
             y="hindfoot_length", 
             alpha = 0.1, 
             hue = "species_id")
-
+plt$show()
 
 
 print("I made a plot!")
