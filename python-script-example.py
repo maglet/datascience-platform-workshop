@@ -41,3 +41,4 @@ sns.relplot(data=surveys,
             alpha = 0.1, 
             hue = "species_id")
 
+print("I made a plot!")
