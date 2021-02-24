@@ -1,0 +1,69 @@
+---
+title: "Flexdashboard report"
+runtime: shiny
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+   
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(knitr)
+library(shiny)
+
+surveys_complete<-read_csv("data/complete_surveys.csv")
+```
+
+Column {.sidebar}
+--------------------------------------------------------------------
+```{r inputs, echo=FALSE}
+sliderInput("max_weight", label = "Select max weight:",
+            min = 0.0, 
+            max = max(surveys_complete$weight), 
+            value = max(surveys_complete$weight), 
+            step = 20)
+
+sliderInput("max_hfl", label = "Select max hindfoot length:",
+            min = 0.0, 
+            max = max(surveys_complete$hindfoot_length), 
+            value = max(surveys_complete$hindfoot_length), 
+            step = 20)
+```
+
+Column
+--------------------------------------------------------------------
+### Small animal survey data
+
+This is a survey of small animals from `r nlevels(as.factor(surveys_complete$plot_id))` plots
+from the years `r min(surveys_complete$year)` to `r max(surveys_complete$year)`. Each row is an animal. Each column is an attribute of that animal. The variables recorded are `r names(surveys_complete)`.
+
+The mean weight of all animals surveyed 
+is `r mean(surveys_complete$weight, na.rm=TRUE)`.
+
+### Sex Table
+Here is a breakdown of the number of female vs male animals observed in the study
+```{r}
+kable(surveys_complete%>%
+                group_by(sex)%>%
+                tally)
+```
+
+Column
+--------------------------------------------------------------------
+
+### Weight vs. Hindfoot length
+Species cluster together when plotting weight vs. hindfoot length
+```{r}
+renderPlot(surveys_complete%>%
+                filter(weight<=input$max_weight,
+                       hindfoot_length<=input$max_hfl)%>%
+                ggplot(aes(x = weight,
+                           y = hindfoot_length, 
+                           color = species_id)) + 
+                geom_point(alpha = 0.1,
+                           aes(color = species_id)))
+```
+
+
