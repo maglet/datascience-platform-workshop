@@ -14,9 +14,6 @@ library(knitr)
 surveys_complete<-read_csv("data/complete_surveys.csv")
 ```
 
-Column {data-width=650}
---------------------------------------------------------------------
-
 ### Small animal survey data
 
 This is a survey of small animals from `r nlevels(as.factor(surveys_complete$plot_id))` plots

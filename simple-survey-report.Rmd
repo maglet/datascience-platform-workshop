@@ -5,8 +5,7 @@ date: "4/10/2018"
 output: html_document
 resource_files:
 - data/complete_surveys.csv
-- data/complete_surveys.csv
-- data/complete_surveys.csv
+
 ---
 
 ```{r setup, include=FALSE}

@@ -3,53 +3,24 @@ title: "Markdown Demo"
 author: "Tobin Magle"
 date: "4/10/2018"
 output: html_document
-resource_files:
-- data/complete_surveys.csv
-- data/complete_surveys.csv
-- data/complete_surveys.csv
 ---
 
 ```{r setup, include=FALSE}
-
 library(tidyverse)
 library(knitr)
 library(reticulate)
-knitr::knit_engines$set(python = reticulate::eng_python) 
 
-use_condaenv('/home/tmagle/.local/share/r-miniconda/envs/r-reticulate')
 surveys_complete<-read_csv("data/complete_surveys.csv")
-
 ```
-
-# Small animal survey data
-
-This is a survey of small animals from `r nlevels(as.factor(surveys_complete$plot_id))` plots
-from the years `r min(surveys_complete$year)` to `r max(surveys_complete$year)`. Each row is an animal. Each column is an attribute of that animal. The variables recorded are `r names(surveys_complete)`.
-
-# Sex table
-Here is a breakdown of the number of female vs male animals observed in the study
-
-```{r, table, echo = FALSE}
-kable(surveys_complete%>%
-                group_by(sex)%>%
-                tally)
-```
-
-# Mean weight
-The mean weight of all animals surveyed 
-is `r mean(surveys_complete$weight, na.rm=TRUE)`.
 
 # Relationship between hindfoot length and weight
-We are interested in the relationship between weight and hindfoot length by species. Here is a graph.
 
 ```{python graph2, echo=FALSE, warnings = FALSE}
 
-
 import seaborn as sns
-import pandas as pd
 import matplotlib.pyplot as plt
-import PyQt5
-plt.switch_backend('agg') # Very Important in R Markdown with Rocker/VBox
+
+plt.switch_backend('agg') # so the plot knits
 
 sns.relplot(data=r.surveys_complete,
             x="weight", 
